@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_demo/config/app_colors.dart';
+
+import 'package:flutter_demo/pages/sub_pages/song_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -28,14 +29,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   ];
 
   @override
-  void initState() {
+  initState() {
     super.initState();
     _tabController = TabController(length: _tabs.length, vsync: this);
   }
 
   List<Widget> _tabContent = [
     Text("1"),
-    Text("1"),
+    SongPage(),
     Text("1"),
     Text("1"),
     Text("1")
