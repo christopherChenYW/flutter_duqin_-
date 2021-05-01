@@ -2,12 +2,15 @@ import 'package:flutter_demo/dao/song_dao.dart';
 import 'package:flutter_demo/entity/song_entity.dart';
 
 class SongService {
-  static Future<List<dynamic>> getSongsDataByPage(
+  static Future<SongList> getSongsDataByPage(
       {int page = 1, int limit = 5}) async {
-    return SongDao.getSongsByPage(page, limit);
+    Map response = await SongDao.getSongsByPage(page, limit);
+
+    return SongList.fromJson(response['data'], response['count']);
   }
 
-  static Future<List<dynamic>> getAllSongs() async {
-    return SongDao.getAllSongs();
+  static Future<SongList> getAllSongs() async {
+    Map response = await SongDao.getAllSongs();
+    return SongList.fromJson(response['data'], response['count']);
   }
 }

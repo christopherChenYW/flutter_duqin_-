@@ -39,10 +39,11 @@ class SongItem {
 //歌曲详情页数据
 class SongList {
   final List<SongItem> list;
+  final int songCount;
+  SongList(this.list, this.songCount);
 
-  SongList(this.list);
-
-  factory SongList.fromJson(List<dynamic> jsonList) {
-    return SongList(jsonList.map((e) => SongItem.fromJson(e)).toList());
+  factory SongList.fromJson(List<dynamic> jsonList, int songCount) {
+    return SongList(
+        jsonList.map((e) => SongItem.fromJson(e)).toList(), songCount);
   }
 }

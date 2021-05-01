@@ -5,8 +5,8 @@ class Singer {
   final String type;
   final int musiccount;
   final int musicplaycount;
-  final DateTime gctime;
-  final DateTime gmtime;
+  final String gctime;
+  final String gmtime;
   final int version;
   final int deleted;
 
@@ -24,14 +24,14 @@ class Singer {
 
   factory Singer.fromJson(dynamic item) {
     return Singer(
-        id: item['id'],
+        id: item['userid'],
         coverpictureurl: item['coverpictureurl'],
         nickname: item['nickname'],
         type: item['type'],
         musiccount: item['musiccount'],
-        musicplaycount: item[' musicplaycount'],
+        musicplaycount: item['musicplaycount'],
         gctime: item['gctime'],
-        gmtime: item[' gmtime'],
+        gmtime: item['gmtime'],
         version: item['version'],
         deleted: item['deleted']);
   }

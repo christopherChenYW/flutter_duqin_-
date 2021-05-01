@@ -83,7 +83,6 @@ class HttpRequest {
     CancelToken? cancelToken,
   }) async {
     Options requestOptions = setAuthorizationHeader(options ?? Options());
-    print(path);
     Response response = await dio!.get(
       path,
       queryParameters: params,
