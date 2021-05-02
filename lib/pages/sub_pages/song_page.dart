@@ -1,23 +1,28 @@
+import 'dart:async';
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/component/error_component.dart';
+import 'package:flutter_demo/component/loading_circle.dart';
 import 'package:flutter_demo/config/app_colors.dart';
-import 'package:flutter_demo/dao/song_dao.dart';
 import 'package:flutter_demo/entity/song_entity.dart';
 import 'package:flutter_demo/service/song_service.dart';
 import 'package:flutter_demo/util/util.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class SongPage extends StatefulWidget {
   @override
   _SongPageState createState() => _SongPageState();
 }
 
-class _SongPageState extends State<SongPage> {
+class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
   final List<SongItem> _songList = [];
   int page = 1;
-  int limit = 10;
+  int limit = 15;
   int songCount = 0;
+  bool hasError = false;
   String errorMsg = "";
+  bool visible = true;
   @override
   void initState() {
     super.initState();
@@ -25,30 +30,90 @@ class _SongPageState extends State<SongPage> {
   }
 
   _getSongs() {
-    try {
-      SongService.getSongsDataByPage(page: this.page, limit: this.limit)
-          .then((value) {
-        this.setState(() {
-          page++;
-          songCount = value.songCount;
-          _songList.addAll(value.list);
-        });
-      });
-    } catch (e) {
+    SongService.getSongsDataByPage(page: this.page, limit: this.limit)
+        .then((value) {
       this.setState(() {
-        errorMsg = e.toString();
+        errorMsg = "";
+        page++;
+        songCount = value.songCount;
+        _songList.addAll(value.list);
+        visible = false;
+
+        if ((page - 1) * limit + 1 > songCount)
+          _controller.finishLoad(success: true, noMore: true);
+        else
+          _controller.finishLoad(success: true, noMore: false);
       });
-    }
+    }).onError((error, stackTrace) {
+      this.setState(() {
+        visible = false;
+        errorMsg = error.toString();
+      });
+    });
   }
 
+  EasyRefreshController _controller = EasyRefreshController();
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        return SongCard(songItem: _songList[index]);
-      },
-      itemCount: _songList.length,
-    );
+    if (errorMsg.length != 0) {
+      return FeedBack(
+          description: "无法连接到网络",
+          onTap: () async {
+            this.setState(() {
+              errorMsg = "";
+              visible = true;
+              page = 1;
+            });
+            await Future.delayed(Duration(seconds: 2), () {
+              if (mounted) {
+                _getSongs();
+              }
+            });
+          });
+    } else
+      return Stack(children: [
+        EasyRefresh.custom(
+          controller: _controller,
+          enableControlFinishRefresh: true,
+          enableControlFinishLoad: true,
+          header: ClassicalHeader(
+              refreshText: "下拉刷新",
+              refreshingText: "刷新中",
+              refreshedText: "刷新完成"),
+          footer: ClassicalFooter(noMoreText: "没有更多数据了", loadedText: "加载完成"),
+          slivers: <Widget>[
+            SliverList(
+              delegate: SliverChildBuilderDelegate((context, index) {
+                return SongCard(songItem: _songList[index]);
+              }, childCount: _songList.length),
+            ),
+          ],
+          onRefresh: () async {
+            await Future.delayed(Duration(seconds: 2), () {
+              if (mounted) {
+                setState(() {
+                  this.setState(() {
+                    _songList.clear();
+                    page = 1;
+                    _getSongs();
+                    _controller.finishRefresh(success: true, noMore: false);
+                  });
+                });
+              }
+            });
+          },
+          onLoad: () async {
+            await Future.delayed(Duration(microseconds: 500), () {
+              if (mounted) {
+                _getSongs();
+              }
+            });
+          },
+        ),
+        LoadingCircle(
+          visible: visible,
+        )
+      ]);
   }
 }
 
@@ -100,7 +165,10 @@ class _SongTitle extends StatelessWidget {
                 songItem.cnname,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 16, color: AppColors.active),
+                style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.active),
               ),
               Text(
                 songItem.enname,
@@ -121,14 +189,15 @@ class _SongTitle extends StatelessWidget {
                     width: toRpx(30, context),
                   )),
                   Container(
-                    margin: EdgeInsets.only(left: 6),
+                    margin: EdgeInsets.only(left: 3),
                     padding: EdgeInsets.symmetric(vertical: 3, horizontal: 4),
                     decoration: BoxDecoration(
-                        color: Colors.black,
+                        color: colorMap[songItem.singer.type] ?? Colors.green,
                         borderRadius: BorderRadius.circular(4)),
                     child: Text(
-                      songItem.singer.type,
+                      enMap[songItem.singer.type] ?? '未知用户',
                       style: TextStyle(
+                        color: Colors.white,
                         fontSize: 10,
                       ),
                     ),
@@ -185,7 +254,7 @@ class _CommentAndLike extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                "$commentCount",
+                Util.strCount(commentCount),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -203,7 +272,7 @@ class _CommentAndLike extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                "$thumbUpCount",
+                Util.strCount(thumbUpCount),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -221,7 +290,7 @@ class _CommentAndLike extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                "$readCount",
+                Util.strCount(readCount),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

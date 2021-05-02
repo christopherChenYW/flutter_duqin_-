@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/config/app_colors.dart';
+import 'package:flutter_demo/pages/sub_pages/singer_page.dart';
 
 import 'package:flutter_demo/pages/sub_pages/song_page.dart';
+
+import 'article_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -37,8 +40,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   List<Widget> _tabContent = [
     Text("1"),
     SongPage(),
-    Text("1"),
-    Text("1"),
+    SingerPage(),
+    ArticlePage(),
     Text("1")
   ];
   @override

@@ -32,7 +32,6 @@ class HttpInterceptor extends Interceptor {
     // 覆盖异常为自定义的异常类
     HttpException httpException = HttpException.create(err);
     err.error = httpException;
-
     super.onError(err, handler);
   }
 }

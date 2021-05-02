@@ -24,7 +24,7 @@ class Singer {
 
   factory Singer.fromJson(dynamic item) {
     return Singer(
-        id: item['userid'],
+        id: item['userid'] ?? item["id"],
         coverpictureurl: item['coverpictureurl'],
         nickname: item['nickname'],
         type: item['type'],
@@ -34,5 +34,14 @@ class Singer {
         gmtime: item['gmtime'],
         version: item['version'],
         deleted: item['deleted']);
+  }
+}
+
+class SingerList {
+  final List<Singer> singerList;
+  final int singerCount;
+  SingerList(this.singerList, this.singerCount);
+  factory SingerList.fromJson({required List<dynamic> data, int count = 0}) {
+    return SingerList(data.map((e) => Singer.fromJson(e)).toList(), count);
   }
 }

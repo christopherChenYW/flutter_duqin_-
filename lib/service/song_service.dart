@@ -5,7 +5,6 @@ class SongService {
   static Future<SongList> getSongsDataByPage(
       {int page = 1, int limit = 5}) async {
     Map response = await SongDao.getSongsByPage(page, limit);
-
     return SongList.fromJson(response['data'], response['count']);
   }
 
