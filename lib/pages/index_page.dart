@@ -7,8 +7,8 @@ import 'package:flutter_demo/pages/sub_pages/tiny_video_page.dart';
 
 class IndexPage extends StatefulWidget {
   final initIndex;
-
-  const IndexPage({Key? key, this.initIndex = 0}) : super(key: key);
+  final Map? arguments;
+  IndexPage({Key? key, this.initIndex = 0, this.arguments}) : super(key: key);
 
   @override
   _IndexPageState createState() => _IndexPageState();
@@ -16,6 +16,7 @@ class IndexPage extends StatefulWidget {
 
 class _IndexPageState extends State<IndexPage> {
   late int _currntIndex = 0;
+
   final List<BottomNavigationBarItem> _bottomNavBarItemList = [];
   final Map<String, String> _bottomNames = {
     'home': "首页",
@@ -33,7 +34,6 @@ class _IndexPageState extends State<IndexPage> {
   ];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _currntIndex = widget.initIndex;
 

@@ -3,6 +3,7 @@ import 'package:flutter_demo/config/app_colors.dart';
 import 'package:flutter_demo/pages/sub_pages/singer_page.dart';
 
 import 'package:flutter_demo/pages/sub_pages/song_page.dart';
+import 'package:flutter_demo/pages/sub_pages/video_page.dart';
 
 import 'article_page.dart';
 
@@ -42,7 +43,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     SongPage(),
     SingerPage(),
     ArticlePage(),
-    Text("1")
+    VideoPage()
   ];
   @override
   Widget build(BuildContext context) {

@@ -16,7 +16,7 @@ const Map colorMap = {
   'NORMAL_USER': AppColors.unactive,
   'DQ_SINGER': AppColors.info,
   'DQ_OFFICIAL_ACCOUNT': AppColors.success,
-  'ADMIN': AppColors.danger
+  'ADMIN': AppColors.danger,
 };
 
 class Util {

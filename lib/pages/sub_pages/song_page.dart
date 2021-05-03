@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/component/comment_and_like_component.dart';
 import 'package:flutter_demo/component/error_component.dart';
 import 'package:flutter_demo/component/loading_circle.dart';
+import 'package:flutter_demo/component/user_type_component.dart';
 import 'package:flutter_demo/config/app_colors.dart';
 import 'package:flutter_demo/entity/song_entity.dart';
 import 'package:flutter_demo/service/song_service.dart';
@@ -188,20 +190,7 @@ class _SongTitle extends StatelessWidget {
                     fit: BoxFit.cover,
                     width: toRpx(30, context),
                   )),
-                  Container(
-                    margin: EdgeInsets.only(left: 3),
-                    padding: EdgeInsets.symmetric(vertical: 3, horizontal: 4),
-                    decoration: BoxDecoration(
-                        color: colorMap[songItem.singer.type] ?? Colors.green,
-                        borderRadius: BorderRadius.circular(4)),
-                    child: Text(
-                      enMap[songItem.singer.type] ?? '未知用户',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                      ),
-                    ),
-                  ),
+                  UserTypeConponment(type: songItem.singer.type),
                   Padding(
                     padding: const EdgeInsets.only(left: 4.0),
                     child: SizedBox(
@@ -212,7 +201,7 @@ class _SongTitle extends StatelessWidget {
                       ),
                     ),
                   ),
-                  _CommentAndLike(
+                  CommentAndLike(
                     commentCount: songItem.commentcount,
                     thumbUpCount: songItem.thumbupcount,
                     readCount: songItem.readcount,
@@ -224,81 +213,6 @@ class _SongTitle extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class _CommentAndLike extends StatelessWidget {
-  final int commentCount;
-  final int thumbUpCount;
-  final int readCount;
-  const _CommentAndLike({
-    Key? key,
-    this.commentCount = 0,
-    this.thumbUpCount = 0,
-    this.readCount = 0,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-        child: Row(
-      children: [
-        Expanded(
-            child: Row(
-          children: [
-            Image.asset(
-              "assets/images/icons/comment.png",
-              width: 20,
-              color: Colors.black,
-              fit: BoxFit.cover,
-            ),
-            Expanded(
-              child: Text(
-                Util.strCount(commentCount),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            )
-          ],
-        )),
-        Expanded(
-            child: Row(
-          children: [
-            Image.asset(
-              "assets/images/icons/like.png",
-              width: 20,
-              color: Colors.black,
-              fit: BoxFit.cover,
-            ),
-            Expanded(
-              child: Text(
-                Util.strCount(thumbUpCount),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            )
-          ],
-        )),
-        Expanded(
-            child: Row(
-          children: [
-            Image.asset(
-              "assets/images/icons/read.png",
-              width: 20,
-              color: Colors.black,
-              fit: BoxFit.cover,
-            ),
-            Expanded(
-              child: Text(
-                Util.strCount(readCount),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            )
-          ],
-        )),
-      ],
-    ));
   }
 }
 

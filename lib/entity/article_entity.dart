@@ -3,7 +3,7 @@ class Article {
 
   final int userid;
 
-  final String coverurllist;
+  final List<String> coverurllist;
 
   final String title;
 
@@ -13,8 +13,15 @@ class Article {
 
   final int readcount;
 
+  final String nickname;
+  final String usercoverpictureurl;
+  final String type;
+
   Article(
-      {required this.id,
+      {required this.nickname,
+      required this.usercoverpictureurl,
+      required this.type,
+      required this.id,
       required this.userid,
       required this.coverurllist,
       required this.title,
@@ -23,14 +30,18 @@ class Article {
       required this.readcount});
 
   factory Article.fromJson(dynamic item) {
+    List<String> urlList = item['coverurllist'].toString().split(",");
     return Article(
         id: item['id'],
         userid: item['userid'],
-        coverurllist: item['coverurllist'],
+        coverurllist: urlList,
         title: item['title'],
         commentcount: item['commentcount'],
         thumbupcount: item['thumbupcount'],
-        readcount: item['readcount']);
+        readcount: item['readcount'],
+        nickname: item['nickname'],
+        type: item['type'],
+        usercoverpictureurl: item['usercoverpictureurl']);
   }
 }
 

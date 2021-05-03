@@ -81,6 +81,7 @@ class _SingerPageState extends State<SingerPage> {
                     page = 1;
                     _getSingersData();
                   });
+                  _controller.finishRefresh(success: true, noMore: false);
                 });
               }
             });

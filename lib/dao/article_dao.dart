@@ -4,15 +4,14 @@ class ArticleDao {
   static const String BASEURL = "/flutterapi/article/";
 
   static Future<dynamic> getArticleByPage(int page, int limit) async {
-    Map<String, dynamic> response = await Http.get(
-        "${BASEURL}selectSongsWithUserByPage",
+    Map<String, dynamic> response = await Http.get("${BASEURL}getArticleByPage",
         params: {"page": page, "limit": limit});
     return response;
   }
 
   static Future<dynamic> getAllArticles() async {
     Map<String, dynamic> response = await Http.get(
-      "${BASEURL}selectAllSongsWithoutUser",
+      "${BASEURL}getAllArticles",
     );
     return response;
   }
